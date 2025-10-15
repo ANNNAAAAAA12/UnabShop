@@ -25,11 +25,11 @@ Su objetivo es ofrecer una experiencia de compra moderna, intuitiva y accesible 
 - **Entorno de desarrollo:** Android Studio  
 - **UI Toolkit:** Jetpack Compose / XML  
 - **Gestión de estados:** `remember`, `mutableStateOf`, `ViewModel`  
-- **Navegación:** Jetpack Navigation Component  
-- **Persistencia de datos:** Room / SharedPreferences  
+- **Navegación:** Jetpack Navigation Component   
 - **Control de versiones:** Git y GitHub  
 
 ---
+
 
 
 
