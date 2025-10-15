@@ -12,36 +12,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ana.ramos.unab.edu.unabshop.ui.theme.UnabShopTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.remember
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
-            UnabShopTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+          val navController = rememberNavController()
+            val startDestination = "login"
+          NavHost(navController,startDestination) {
+              composable(route = "login") {
+                  LoginScreen()
+              }
+                  composable(route = "Register"){
+                      RegisterScreen()}
+                      composable(route = "Home"){
+                          HomeScreen()
+              }
+          }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    UnabShopTheme {
-        Greeting("Android")
     }
 }
