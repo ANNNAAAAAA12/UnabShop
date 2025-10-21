@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "152071781511",
+    "project_id": "loginfirebase-4a22a",
+    "storage_bucket": "loginfirebase-4a22a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:152071781511:android:5cf225cb02bb6a829ecc22",
+        "android_client_info": {
+          "package_name": "ana.ramos.unab.edu.unabshop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXyceV8OENlr_SCDcaW7_Qew21J9z0Ikw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

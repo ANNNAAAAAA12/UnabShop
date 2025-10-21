@@ -24,9 +24,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,13 +39,25 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun LoginScreen(onClickRegister : () ->Unit ={}  )
+fun LoginScreen(onClickRegister :()->Unit = {} , onSuccessfulLogin :()->Unit = {} )
 {
+    val auth = Firebase.auth
+    val activity = LocalView.current.context as MainActivity
+
+    //estados
+
+    var inputEmail by remember{ mutableStateOf("") }
+    var inputPassword by remember{ mutableStateOf("") }
+    var loginError by remember{ mutableStateOf("") }
+
+
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -71,8 +88,8 @@ fun LoginScreen(onClickRegister : () ->Unit ={}  )
 
             // Campo de Correo Electrónico
             OutlinedTextField(
-                value = "", // Valor vacío (sin estado)
-                onValueChange = {},
+                value = inputEmail,
+                onValueChange = {inputEmail = it},
                 label = { Text("Correo Electrónico") },
                 leadingIcon = {
                     Icon(
@@ -91,8 +108,8 @@ fun LoginScreen(onClickRegister : () ->Unit ={}  )
 
             // Campo de Contraseña
             OutlinedTextField(
-                value = "", // Valor vacío (sin estado)
-                onValueChange = {},
+                value = inputPassword,
+                onValueChange = {inputPassword = it},
                 label = { Text("Contraseña") },
                 leadingIcon = {
                     Icon(
@@ -111,9 +128,28 @@ fun LoginScreen(onClickRegister : () ->Unit ={}  )
                 )
             )
             Spacer(modifier = Modifier.height(24.dp))
+            if (loginError.isNotEmpty()){
+            Text(
+                text = loginError,
+                color = Color.Red,
+                modifier = Modifier.padding(bottom = 8.dp))
+            }
             // Botón de Iniciar Sesión
             Button(
-                onClick = { },
+                onClick = {
+                    auth.signInWithEmailAndPassword(inputEmail,inputPassword)
+                        .addOnCompleteListener (activity ){ task ->
+                            if (task.isSuccessful)
+                            {
+                                onSuccessfulLogin
+                            }
+                            else
+                            {
+                                loginError = "Correo o contraseña incorrectos"
+                            }
+                        }
+
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -128,7 +164,7 @@ fun LoginScreen(onClickRegister : () ->Unit ={}  )
             }
             Spacer(modifier = Modifier.height(16.dp))
             // Enlace para Registrarse
-            TextButton(onClick = {onClickRegister}) {
+            TextButton(onClick = {onClickRegister()}) {
                 Text(
                     text = "¿No tienes una cuenta? Regístrate",
                     color = Color(0xFFFF9900)
