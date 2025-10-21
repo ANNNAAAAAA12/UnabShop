@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -40,6 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.auth
 
 @Preview
@@ -61,8 +66,10 @@ fun LoginScreen(onClickRegister :()->Unit = {} , onSuccessfulLogin :()->Unit = {
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValues)
+                .fillMaxSize()
+                .imePadding()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 32.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -141,11 +148,15 @@ fun LoginScreen(onClickRegister :()->Unit = {} , onSuccessfulLogin :()->Unit = {
                         .addOnCompleteListener (activity ){ task ->
                             if (task.isSuccessful)
                             {
-                                onSuccessfulLogin
+                                onSuccessfulLogin()
                             }
                             else
                             {
-                                loginError = "Correo o contraseña incorrectos"
+                                loginError = when(task.exception)
+                                {is FirebaseAuthInvalidCredentialsException->"correo o contraseña incorrecta"
+                                is FirebaseAuthInvalidUserException-> "usuario no existe"
+                                else -> "error al iniciar sesion"
+                                }
                             }
                         }
 
