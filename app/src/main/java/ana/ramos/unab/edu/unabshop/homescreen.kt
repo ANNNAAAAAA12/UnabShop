@@ -9,8 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,12 +29,11 @@ import com.google.firebase.auth.auth
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onClickLogout :()->Unit = {}) {
+fun HomeScreen(onClickLogout: () -> Unit = {}) {
     val auth = Firebase.auth
     val user = auth.currentUser
 
     Scaffold(
-
         topBar = {
             MediumTopAppBar(
                 title = {
@@ -47,55 +44,50 @@ fun HomeScreen(onClickLogout :()->Unit = {}) {
                     )
                 },
                 actions = {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Filled.Notifications, "Notificaciones")
+                    IconButton(onClick = {  }) {
+                        Icon(Icons.Filled.Notifications, contentDescription = "Notificaciones")
                     }
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Filled.ShoppingCart, "Carrito")
+                    IconButton(onClick = {  }) {
+                        Icon(Icons.Filled.ShoppingCart, contentDescription = "Carrito")
                     }
-                    IconButton(onClick = { }) {
-                        Icon(Icons.AutoMirrored.Filled.ExitToApp, "Carrito")
+
+                    IconButton(onClick = {
+                        auth.signOut()
+                        onClickLogout()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                            contentDescription = "Logout"
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = Color(0xFFFF9900),
                     titleContentColor = Color.White,
-                    actionIconContentColor = Color.White
+                    actionIconContentColor = Color.White // Esto aplica el color blanco a los iconos
                 )
             )
         },
         bottomBar = {
+
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFF5F5F5))
-                .padding(paddingValues)
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("HOME SCREEN", fontSize = 30.sp)
-                if (user != null) {
-                    Text(user.email.toString())
-                } else {
-                    Text("no hay usuario")
-                }
-                Button(onClick = {
-                    auth.signOut()
-                    onClickLogout()
-                },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF9900),
-                    )){
-                    Text("Cerrar Sesión")
-                }
+            Text("HOME SCREEN", fontSize = 30.sp)
+            if (user != null) {
+                Text(user.email.toString())
+            } else {
+                Text("No hay usuario logueado")
             }
+
+
         }
     }
-
 }
