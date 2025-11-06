@@ -198,35 +198,54 @@ if ( registerError.isNotEmpty()){Text(registerError, color = Color.Red)}
 
             // Botón de Registro
             Button(
+                // El nuevo onClick corregido y optimizado
                 onClick = {
-                    val isValidName = validateName(inputName).first
-                    val isValidEmail = validateEmail(inputEmail).first
-                    val isValidPassword = validatePassword(inputPassword).first
-                    val isValidConfirmPassword = validateConfirmPassword(inputPassword, inputPasswordConfirmation).first
+                    // 1. Limpiamos errores previos cada vez que se presiona el botón
+                    nameError = ""
+                    emailError = ""
+                    passwordError = ""
+                    passwordConfirmationError = ""
+                    registerError = ""
 
-                     nameError = validateName(inputName).second
-                     emailError = validateEmail(inputEmail).second
-                     passwordError = validatePassword(inputPassword).second
-                     passwordConfirmationError = validateConfirmPassword(inputPassword, inputPasswordConfirmation).second
+                    // 2. Realizamos las validaciones de los campos una sola vez
+                    val nameValidation = validateName(inputName)
+                    val emailValidation = validateEmail(inputEmail)
+                    val passwordValidation = validatePassword(inputPassword)
+                    val confirmPasswordValidation = validateConfirmPassword(inputPassword, inputPasswordConfirmation)
 
-                if (isValidName && isValidEmail && isValidPassword && isValidConfirmPassword) {
-                    auth.createUserWithEmailAndPassword(inputEmail, inputPassword)
-                        .addOnCompleteListener(activity) { task ->
-                            if (task.isSuccessful) {
-                                onSuccessfullRegister()
-                            } else {
-                                registerError = when (task.isSuccessful){
-                                    is FirebaseAuthInvalidCredentialsException -> "correo invalido"
-                                is FirebaseAuthUserCollisionException -> "correo ya registrado"
-                                else -> "error al registrarse"
+                    // 3. Asignamos los mensajes de error si los hay
+                    nameError = nameValidation.second
+                    emailError = emailValidation.second
+                    passwordError = passwordValidation.second
+                    passwordConfirmationError = confirmPasswordValidation.second
+
+                    // 4. Comprobamos si todos los campos del formulario son válidos
+                    val allFieldsAreValid = nameValidation.first && emailValidation.first && passwordValidation.first && confirmPasswordValidation.first
+
+                    if (allFieldsAreValid) {
+                        // Si los campos son válidos, intentamos el registro en Firebase
+                        auth.createUserWithEmailAndPassword(inputEmail, inputPassword)
+                            .addOnCompleteListener(activity) { task ->
+                                if (task.isSuccessful) {
+                                    // ¡ÉXITO! Si el registro es exitoso, se llama a esta función que te llevará al HomeScreen
+                                    onSuccessfullRegister()
+                                } else {
+                                    // --- INICIO DE LA CORRECCIÓN PRINCIPAL ---
+                                    // Si falla, revisamos la EXCEPCIÓN para saber por qué
+                                    registerError = when (task.exception) {
+                                        is FirebaseAuthInvalidCredentialsException -> "El formato del correo es inválido."
+                                        is FirebaseAuthUserCollisionException -> "El correo ya está registrado por otro usuario."
+                                        else -> "Ocurrió un error inesperado al registrar. Intenta de nuevo."
+                                    }
+                                    // --- FIN DE LA CORRECCIÓN PRINCIPAL ---
+                                }
                             }
-                        }
-                        }
-}else{
-registerError = "Error al registrarse"
-}
-
+                    } else {
+                        // Si los campos del formulario no son válidos, mostramos un mensaje genérico
+                        registerError = "Por favor, corrige los errores en el formulario."
+                    }
                 },
+
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),

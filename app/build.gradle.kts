@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -63,4 +64,16 @@ dependencies {
     //firebase
     implementation(libs.firebase.bom)
     implementation(libs.firebase.auth)
+
+    // ... dentro de dependencies { ... }
+
+    // Para la integración de ViewModel con Compose (necesario para la función viewModel())
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+
+    // ViewModel con el ciclo de vida de KTX (buenas prácticas)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
+
+    // Runtime de Compose (a veces necesario si falta)
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.0-beta03")
+
 }
