@@ -22,14 +22,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 
-// En MainActivity.kt
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            UnabShopTheme { // O el tema de tu app
+            UnabShopTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    NavigationApp() // <-- Importante que se llame aquí
+                    NavigationApp()
                 }
             }
         }

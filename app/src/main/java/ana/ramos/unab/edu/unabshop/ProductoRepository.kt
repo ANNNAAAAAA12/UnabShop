@@ -18,7 +18,7 @@ class ProductoRepository {
                 val productosConId = result.documents.mapNotNull { doc ->
                     val producto = doc.toObject<Producto>()
                     if (producto != null) {
-                        // Creamos un Par: (ID del Documento, Objeto Producto)
+
                         Pair(doc.id, producto)
                     } else {
                         null
@@ -38,7 +38,7 @@ class ProductoRepository {
      */
     fun actualizarEstadoProducto(id: String, nuevoEstado: Boolean, onResult: (Boolean) -> Unit) {
         collection.document(id)
-            .update("activo", nuevoEstado) // Actualiza solo el campo "activo"
+            .update("activo", nuevoEstado)
             .addOnSuccessListener { onResult(true) }
             .addOnFailureListener { onResult(false) }
     }
@@ -50,7 +50,7 @@ class ProductoRepository {
      */
     fun editarProducto(id: String, producto: Producto, onResult: (Boolean) -> Unit) {
         collection.document(id)
-            .set(producto) // set() sobrescribe el documento con los nuevos datos
+            .set(producto)
             .addOnSuccessListener { onResult(true) }
             .addOnFailureListener { onResult(false) }
     }

@@ -8,7 +8,7 @@ class ProductoViewModel : ViewModel() {
 
     private val repository = ProductoRepository()
 
-    // El estado ahora guarda una lista de Pares (ID, Producto)
+
     val listaProductos = mutableStateOf<List<Pair<String, Producto>>>(emptyList())
     val cargando = mutableStateOf(false)
 
